@@ -16,9 +16,6 @@ const io = new Server(server, {
   }
 });
 
-// Serve static files from the Next.js build
-app.use(express.static(path.join(__dirname, 'out')));
-
 // Store active games
 const games = new Map();
 
@@ -164,9 +161,14 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Serve the main app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'out', 'index.html'));
+// Root endpoint for health checks
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'WordWars WebSocket Server',
+    status: 'running',
+    activeGames: games.size,
+    totalPlayers: Array.from(games.values()).reduce((sum, game) => sum + game.players.length, 0)
+  });
 });
 
 const PORT = process.env.PORT || 3001;
