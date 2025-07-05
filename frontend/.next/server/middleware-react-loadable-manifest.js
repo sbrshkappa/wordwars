@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"shared/gameLogic.ts -> ./dictionaryService":{"id":3856,"files":["static/chunks/464.2f8a51767ed4d136.js","static/chunks/856.8b1fd138f597847f.js"]}}';
