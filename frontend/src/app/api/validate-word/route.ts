@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ valid: true });
     }
     return NextResponse.json({ valid: false });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       return NextResponse.json({ valid: false });
     }

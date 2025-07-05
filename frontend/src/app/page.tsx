@@ -106,7 +106,7 @@ export default function Home() {
     });
 
     // Listen for first player joined (to start the game)
-    socket.on('firstPlayerJoined', (data: { gameId: string }) => {
+    socket.on('firstPlayerJoined', () => {
       // Create a game with the current player and a placeholder for the second player
       const newGame = startGame([playerName, 'Waiting for player...']);
       setGameState(newGame);
