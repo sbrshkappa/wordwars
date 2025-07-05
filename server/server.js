@@ -9,7 +9,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3000",
-      "http://192.168.86.208:3000"
+      "http://192.168.86.208:3000",
+      process.env.FRONTEND_URL || "http://localhost:3000"
     ],
     methods: ["GET", "POST"]
   }

@@ -24,7 +24,7 @@ WordWars is a strategic card game where players:
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Next.js 14** - React framework with App Router
+- **Next.js 15** - React framework with App Router
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Utility-first styling
 - **Socket.IO Client** - Real-time communication
@@ -34,6 +34,11 @@ WordWars is a strategic card game where players:
 - **Express.js** - Web server framework
 - **Socket.IO** - Real-time WebSocket server
 - **Node.js** - JavaScript runtime
+
+### Deployment
+- **Railway** - Full-stack hosting platform
+- **Environment Variables** - Dynamic configuration
+- **Multi-service Architecture** - Separate frontend and backend services
 
 ### Shared
 - **Game Logic** - Shared between frontend and backend
@@ -65,9 +70,10 @@ WordWars is a strategic card game where players:
    npm install
    ```
 
-4. **Configure WebSocket connection**
+4. **Configure WebSocket connection (Development)**
    
-   Update the server URL in `frontend/src/utils/websocketService.ts`:
+   For local development, the WebSocket service automatically uses `localhost:3001`.
+   For LAN testing, update the server URL in `frontend/src/utils/websocketService.ts`:
    ```typescript
    const serverUrl = 'http://YOUR_LOCAL_IP:3001';
    ```
@@ -131,9 +137,19 @@ WordWars is a strategic card game where players:
 3. Share the game ID with other players on your network
 
 ### Internet Deployment
-For playing over the internet, deploy both frontend and server to a hosting service like:
+The app is configured for deployment on **Railway**, which hosts both frontend and backend services.
+
+#### Railway Deployment (Recommended)
+1. **Create a Railway account** at [railway.app](https://railway.app)
+2. **Connect your GitHub repository** to Railway
+3. **Deploy automatically** - Railway will detect the project structure and deploy both services
+4. **Set environment variables** (if needed):
+   - `FRONTEND_URL`: Your frontend service URL
+   - `NEXT_PUBLIC_BACKEND_URL`: Your backend service URL
+
+#### Alternative Deployment Options
 - **Frontend**: Vercel, Netlify, or GitHub Pages
-- **Backend**: Railway, Render, or Heroku
+- **Backend**: Render, Heroku, or DigitalOcean
 
 ## 📁 Project Structure
 
@@ -150,6 +166,9 @@ wordwars/
 ├── server/                  # Express.js WebSocket server
 │   ├── server.js           # Main server file
 │   └── package.json
+├── package.json             # Root package.json for Railway deployment
+├── railway.json             # Railway deployment configuration
+├── railway.toml             # Railway service definitions
 ├── .gitignore
 └── README.md
 ```
@@ -172,8 +191,9 @@ wordwars/
 
 **WebSocket Connection Failed**
 - Check if the server is running on port 3001
-- Verify the IP address in `websocketService.ts`
+- Verify the IP address in `websocketService.ts` (for LAN testing)
 - Ensure firewall allows connections on port 3001
+- For production: Check environment variables `NEXT_PUBLIC_BACKEND_URL`
 
 **Game Not Syncing Between Players**
 - Check WebSocket connection status

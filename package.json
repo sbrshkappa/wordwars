@@ -1,0 +1,16 @@
+{
+  "name": "wordwars-fullstack",
+  "version": "1.0.0",
+  "description": "WordWars multiplayer game - full stack deployment",
+  "scripts": {
+    "build": "echo 'Building both frontend and backend...'",
+    "start": "echo 'Starting services...'"
+  },
+  "workspaces": [
+    "frontend",
+    "server"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 

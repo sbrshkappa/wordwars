@@ -1,11 +1,11 @@
 import { io, Socket } from "socket.io-client";
 
 const getSocketUrl = () => {
-  // Use your local IP address here for LAN testing
-  // e.g., 'http://192.168.1.100:3001'
-  // Fallback to localhost for development
+  // Use environment variable for production, fallback to local development
   if (typeof window !== "undefined") {
-    return "http://192.168.86.208:3001"; // Your computer's local IP
+    // In production, this will be set by Railway
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+    return backendUrl;
   }
   return "";
 };
