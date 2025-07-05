@@ -29,7 +29,7 @@ export async function isValidDictionaryWord(word: string): Promise<boolean> {
     const res = await fetch(`/api/validate-word?word=${encodeURIComponent(word)}`);
     const data = await res.json();
     return !!data.valid;
-  } catch (e) {
+  } catch {
     // Fail open
     return true;
   }

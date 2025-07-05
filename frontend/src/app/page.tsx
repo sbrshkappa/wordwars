@@ -11,7 +11,7 @@ export default function Home() {
   const [playerName, setPlayerName] = useState('');
   const [isMultiplayer, setIsMultiplayer] = useState(false);
   const [gameId, setGameId] = useState<string>('');
-  const [currentPlayerId, setCurrentPlayerId] = useState<string>('');
+
   const [connectedPlayers, setConnectedPlayers] = useState<string[]>([]);
   const [myPlayerId, setMyPlayerId] = useState<string>('');
   const playerNameRef = useRef<string>('');
@@ -26,7 +26,7 @@ export default function Home() {
     socket.on('gameStateUpdate', (updatedGameState: GameState) => {
       // If we don't have a player ID yet, try to find ourselves in the game state
       if (!myPlayerId && !myPlayerIdRef.current) {
-        const currentPlayerName = playerNameRef.current || playerName || (socket as any).myPlayerName;
+        const currentPlayerName = playerNameRef.current || playerName || (socket as unknown as { myPlayerName?: string }).myPlayerName;
         const myPlayerInGameState = updatedGameState.players.find(p => p.name === currentPlayerName);
         if (myPlayerInGameState) {
           setMyPlayerId(myPlayerInGameState.id);
@@ -38,11 +38,11 @@ export default function Home() {
     });
 
     // Listen for player joining
-    socket.on('playerJoined', (data: { player: any; allPlayers: any[] }) => {
+    socket.on('playerJoined', (data: { player: { name: string; playerId: string }; allPlayers: { name: string; playerId: string }[] }) => {
       setConnectedPlayers(data.allPlayers.map(p => p.name));
       
       // Get the stored player name from the socket
-      const storedPlayerName = (socket as any).myPlayerName;
+      const storedPlayerName = (socket as unknown as { myPlayerName?: string }).myPlayerName;
       
       // Set our player ID if this is us
       const currentPlayerName = playerNameRef.current || playerName || storedPlayerName;
@@ -100,7 +100,7 @@ export default function Home() {
     });
 
     // Listen for player leaving
-    socket.on('playerLeft', (data: { playerId: string; allPlayers: any[] }) => {
+    socket.on('playerLeft', (data: { playerId: string; allPlayers: { name: string; playerId: string }[] }) => {
       console.log('Player left:', data.playerId);
       setConnectedPlayers(data.allPlayers.map(p => p.name));
     });
@@ -118,9 +118,9 @@ export default function Home() {
     });
 
     // Listen for player list updates
-    socket.on('playerListUpdate', (data: { allPlayers: any[] }) => {
+    socket.on('playerListUpdate', (data: { allPlayers: { name: string; playerId: string }[] }) => {
       // Get the stored player name from the socket
-      const storedPlayerName = (socket as any).myPlayerName;
+      const storedPlayerName = (socket as unknown as { myPlayerName?: string }).myPlayerName;
       const currentPlayerName = playerNameRef.current || playerName || storedPlayerName;
       
       // Find our player in the list and set our ID
@@ -140,7 +140,7 @@ export default function Home() {
       socket.off('firstPlayerJoined');
       socket.off('playerListUpdate');
     };
-  }, [socket]);
+  }, [socket, gameState, myPlayerId, playerName]);
 
   const startNewGame = () => {
     if (isMultiplayer) {
@@ -149,7 +149,7 @@ export default function Home() {
       setGameId(newGameId);
       
       // Store the player name in the socket object for later reference
-      (socket as any).myPlayerName = playerName;
+      (socket as unknown as { myPlayerName?: string }).myPlayerName = playerName;
       
       // Join the game room
       socket.emit('joinGame', {
