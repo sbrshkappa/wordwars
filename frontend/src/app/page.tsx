@@ -159,7 +159,10 @@ export default function Home() {
     } else {
       // Single player mode - create new game immediately
       const newGame = startGame([playerName, 'Computer']);
-    setGameState(newGame);
+      setGameState(newGame);
+      // Set the player ID to the first player (human player)
+      setMyPlayerId('player_0');
+      myPlayerIdRef.current = 'player_0';
     }
   };
 

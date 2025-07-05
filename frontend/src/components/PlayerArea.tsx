@@ -34,15 +34,17 @@ export default function PlayerArea({
             <span className="text-white/60 text-xs">({player.hand.length})</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
-            {/* Big Score Display */}
-            <div className="text-center">
-              <div className="text-white font-bold text-lg sm:text-2xl lg:text-3xl">
-                {currentScore}
+            {/* Big Score Display - Only show for current player */}
+            {!isOpponent && (
+              <div className="text-center">
+                <div className="text-white font-bold text-lg sm:text-2xl lg:text-3xl">
+                  {currentScore}
+                </div>
+                <div className="text-white/60 text-xs">
+                  {currentScore === 0 ? '🎉 WIN!' : 'points'}
+                </div>
               </div>
-              <div className="text-white/60 text-xs">
-                {currentScore === 0 ? '🎉 WIN!' : 'points'}
-              </div>
-            </div>
+            )}
             {player.isCurrentTurn && (
               <span className="bg-yellow-500 text-black text-xs px-1 sm:px-2 py-0.5 rounded-full font-semibold">
                 TURN

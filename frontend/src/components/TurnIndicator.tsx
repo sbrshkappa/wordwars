@@ -104,10 +104,7 @@ export default function TurnIndicator({
             <span className="text-white font-semibold">{currentPlayer.hand.length}</span>
           </div>
           
-          <div className="flex items-center justify-between">
-            <span className="text-white/70 text-sm">Score:</span>
-            <span className="text-white font-semibold">{currentPlayer.score}</span>
-          </div>
+
           
           <div className="flex items-center justify-between">
             <span className="text-white/70 text-sm">Discard Status:</span>
