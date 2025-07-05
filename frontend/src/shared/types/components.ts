@@ -29,6 +29,7 @@ export interface PlayingFieldProps {
   isExtendMode?: boolean;
   selectedWordId?: string | null;
   onWordSelect?: (wordId: string) => void;
+  turnStatus?: string;
 }
 
 // DeckAndControls Component Types

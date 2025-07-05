@@ -2,7 +2,7 @@
 
 import Card from './Card';
 import { PlayerAreaProps } from '@/shared/types/components';
-
+import { calculateHandScore } from '@/shared/gameLogic';
 
 export default function PlayerArea({
   player,
@@ -16,6 +16,10 @@ export default function PlayerArea({
   const selectedCardsArray = Array.from(selectedCards)
     .map(cardId => player.hand.find(card => card.id === cardId))
     .filter((card): card is NonNullable<typeof card> => card !== undefined);
+
+  // Calculate current hand score (this is now the player's score)
+  const currentScore = calculateHandScore(player.hand);
+
       return (
       <div className={`h-full flex flex-col overflow-hidden relative ${player.isCurrentTurn ? 'ring-2 ring-yellow-400 ring-opacity-75' : ''}`}>
       {/* Player's Hand with integrated info */}
@@ -24,15 +28,21 @@ export default function PlayerArea({
       }`}>
         <div className="flex justify-between items-start mb-1 sm:mb-2">
           <div className="flex items-center gap-1 sm:gap-2">
-            <h4 className="text-white/80 text-xs">
-              {isOpponent ? 'Opponent\'s Hand' : 'Your Hand'}
+            <h4 className="text-white font-bold text-sm sm:text-base">
+              {player.name}'s Hand
             </h4>
             <span className="text-white/60 text-xs">({player.hand.length})</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
-            <span className="text-white/80 text-xs">
-              Score: {player.score}
-            </span>
+            {/* Big Score Display */}
+            <div className="text-center">
+              <div className="text-white font-bold text-lg sm:text-2xl lg:text-3xl">
+                {currentScore}
+              </div>
+              <div className="text-white/60 text-xs">
+                {currentScore === 0 ? '🎉 WIN!' : 'points'}
+              </div>
+            </div>
             {player.isCurrentTurn && (
               <span className="bg-yellow-500 text-black text-xs px-1 sm:px-2 py-0.5 rounded-full font-semibold">
                 TURN
@@ -40,7 +50,7 @@ export default function PlayerArea({
             )}
           </div>
         </div>
-        <div className="flex gap-1 sm:gap-2 flex-wrap overflow-hidden p-2 sm:p-4">
+        <div className="flex gap-1 sm:gap-2 flex-wrap justify-center overflow-hidden p-2 sm:p-4">
           {player.hand.map((card) => (
             <Card
               key={card.id}

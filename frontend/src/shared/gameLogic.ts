@@ -242,15 +242,21 @@ export function initializeGame(playerNames: string[]): GameState {
     id: `player_${index}`,
     name,
     hand: [],
-    score: 0,
+    score: 0, // Will be set after dealing cards
     isCurrentTurn: index === 0,
     hasDiscardedThisTurn: false
   }));
 
   const { updatedPlayers, remainingDeck, discardPile } = dealCards(players, deck);
 
+  // Set initial scores to the total value of each player's hand
+  const playersWithScores = updatedPlayers.map(player => ({
+    ...player,
+    score: calculateHandScore(player.hand)
+  }));
+
   const gameState: GameState = {
-    players: updatedPlayers,
+    players: playersWithScores,
     currentPlayerIndex: 0,
     deck: remainingDeck,
     discardPile,
@@ -320,9 +326,9 @@ export async function playWordWithValidation(
   const selectedCardIds = new Set(selectedCards.map(card => card.id));
   player.hand = player.hand.filter(card => !selectedCardIds.has(card.id));
   
-  // Calculate word score and add to player's score
+  // Calculate word score and subtract from player's score (reducing score is good)
   const wordScore = selectedCards.reduce((total, card) => total + card.points, 0);
-  player.score += wordScore;
+  player.score = Math.max(0, player.score - wordScore); // Don't go below 0
   
   updatedPlayers[playerIndex] = player;
 
@@ -371,9 +377,9 @@ export function playWord(
   const selectedCardIds = new Set(selectedCards.map(card => card.id));
   player.hand = player.hand.filter(card => !selectedCardIds.has(card.id));
   
-  // Calculate word score and add to player's score
+  // Calculate word score and subtract from player's score (reducing score is good)
   const wordScore = selectedCards.reduce((total, card) => total + card.points, 0);
-  player.score += wordScore;
+  player.score = Math.max(0, player.score - wordScore); // Don't go below 0
   
   updatedPlayers[playerIndex] = player;
 
@@ -404,10 +410,10 @@ export function playWord(
   return endTurn(gameStateWithWord);
 }
 
-// Check if a player has won (empty hand)
+// Check if a player has won (reached 0 score)
 export function checkForWinner(gameState: GameState): string | null {
-  const playerWithEmptyHand = gameState.players.find(player => player.hand.length === 0);
-  return playerWithEmptyHand ? playerWithEmptyHand.id : null;
+  const playerWithZeroScore = gameState.players.find(player => player.score === 0);
+  return playerWithZeroScore ? playerWithZeroScore.id : null;
 }
 
 // Discard a card from player's hand
@@ -636,25 +642,14 @@ export function checkGameEnd(gameState: GameState): boolean {
 
 // Calculate final scores and determine winner
 export function calculateFinalScores(gameState: GameState): GameState {
-  const updatedPlayers = gameState.players.map(player => {
-    // Calculate penalty for remaining cards
-    const handPenalty = calculateHandScore(player.hand);
-    const finalScore = Math.max(0, player.score - handPenalty);
-    
-    return {
-      ...player,
-      score: finalScore
-    };
-  });
-
-  // Find winner (player with highest score)
-  const winner = updatedPlayers.reduce((highest, current) => 
-    current.score > highest.score ? current : highest
+  // In the new scoring system, the player with the lowest score wins
+  // (closest to 0 is best)
+  const winner = gameState.players.reduce((lowest, current) => 
+    current.score < lowest.score ? current : lowest
   );
 
   return {
     ...gameState,
-    players: updatedPlayers,
     gamePhase: 'gameOver',
     winner: winner.id
   };
@@ -714,9 +709,9 @@ export async function extendWordWithValidation(
   const selectedCardIds = new Set(selectedCards.map(card => card.id));
   player.hand = player.hand.filter(card => !selectedCardIds.has(card.id));
   
-  // Calculate word score and add to player's score
+  // Calculate word score and subtract from player's score (reducing score is good)
   const wordScore = selectedCards.reduce((total, card) => total + card.points, 0);
-  player.score += wordScore;
+  player.score = Math.max(0, player.score - wordScore); // Don't go below 0
   
   updatedPlayers[playerIndex] = player;
 
@@ -795,9 +790,9 @@ export function extendWord(
   const selectedCardIds = new Set(selectedCards.map(card => card.id));
   player.hand = player.hand.filter(card => !selectedCardIds.has(card.id));
   
-  // Calculate word score and add to player's score
+  // Calculate word score and subtract from player's score (reducing score is good)
   const wordScore = selectedCards.reduce((total, card) => total + card.points, 0);
-  player.score += wordScore;
+  player.score = Math.max(0, player.score - wordScore); // Don't go below 0
   
   updatedPlayers[playerIndex] = player;
 

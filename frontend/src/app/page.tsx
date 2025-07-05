@@ -159,7 +159,7 @@ export default function Home() {
     } else {
       // Single player mode - create new game immediately
       const newGame = startGame([playerName, 'Computer']);
-      setGameState(newGame);
+    setGameState(newGame);
     }
   };
 
@@ -255,11 +255,11 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 sm:items-center">
                 <div className="text-white text-center sm:text-left">
                   <div className="flex flex-wrap justify-center sm:justify-start gap-1 sm:gap-2 text-xs sm:text-sm">
-                    <span className="font-semibold">Round {gameState.roundNumber}</span>
+                  <span className="font-semibold">Round {gameState.roundNumber}</span>
                     <span className="hidden sm:inline">•</span>
-                    <span>Deck: {gameState.deck.length}</span>
+                  <span>Deck: {gameState.deck.length}</span>
                     <span className="hidden sm:inline">•</span>
-                    <span>Discard: {gameState.discardPile.length}</span>
+                  <span>Discard: {gameState.discardPile.length}</span>
                     {isMultiplayer && (
                       <>
                         <span className="hidden sm:inline">•</span>

@@ -91,9 +91,12 @@ export default function TurnIndicator({
       
       {gameState.gamePhase === 'playing' && (
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-white/70 text-sm">Current Turn:</span>
-            <span className="text-white font-semibold">{currentPlayer.name}</span>
+          <div className="flex justify-center mb-3">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
+              <span className="text-white font-semibold text-sm">
+                {currentPlayer.name}'s Turn
+              </span>
+            </div>
           </div>
           
           <div className="flex items-center justify-between">

@@ -397,13 +397,11 @@ export default function GameBoard({
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-green-800 to-green-600 p-1 sm:p-2 min-h-0 overflow-hidden relative">
-      {/* Turn Status */}
-      <div className="absolute top-2 left-2 right-2 z-50 bg-black/70 text-white text-center py-1 px-2 rounded text-sm font-bold">
-        {turnStatus}
-      </div>
+    <div className="w-full h-full bg-gradient-to-br from-green-800 to-green-600 p-1 sm:p-2 min-h-0 overflow-hidden relative flex flex-col">
+
+      
       {/* Top Player Area (Opponent) - Fixed Height */}
-      <div className="h-20 sm:h-28 flex-shrink-0">
+      <div className="h-32 sm:h-40 flex-shrink-0 mb-1 sm:mb-2">
         <PlayerArea
           player={myPlayer?.id === gameState.players[0].id ? gameState.players[1] : gameState.players[0]}
           isCurrentPlayer={false}
@@ -412,7 +410,7 @@ export default function GameBoard({
       </div>
 
       {/* Central Game Area - Flexible, takes remaining space */}
-      <div className="flex-1 flex flex-col sm:flex-row min-h-0 overflow-hidden gap-1 sm:gap-2">
+      <div className="flex-1 flex flex-col sm:flex-row min-h-0 overflow-hidden gap-1 sm:gap-2 mb-1 sm:mb-2">
         
         {/* Playing Field - Takes most space */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -423,11 +421,12 @@ export default function GameBoard({
             isExtendMode={extendMode}
             selectedWordId={selectedWordId}
             onWordSelect={handleWordSelect}
+            turnStatus={turnStatus}
           />
         </div>
 
         {/* Right Sidebar - Turn Indicator and Controls */}
-        <div className="w-full sm:w-64 sm:ml-2 flex-shrink-0 flex flex-col gap-1 sm:gap-2">
+        <div className="w-full sm:w-64 flex-shrink-0 flex flex-col gap-1 sm:gap-2">
           {/* Turn Indicator */}
           <TurnIndicator
             gameState={gameState}
@@ -457,18 +456,16 @@ export default function GameBoard({
         </div>
       </div>
 
-              {/* Bottom Player Area (Current Player) - Fixed to bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 sm:h-52 bg-gradient-to-br from-green-800 to-green-600">
-        <div className="p-1 sm:p-2">
-            <PlayerArea
-            player={myPlayer || gameState.players[0]}
-              isCurrentPlayer={true}
-              selectedCards={selectedCards}
-              onCardClick={handleCardClick}
-              shakeHand={shakeHand}
-            />
-          </div>
-        </div>
+      {/* Bottom Player Area (Current Player) - Fixed Height */}
+      <div className="h-40 sm:h-52 flex-shrink-0">
+        <PlayerArea
+          player={myPlayer || gameState.players[0]}
+          isCurrentPlayer={true}
+          selectedCards={selectedCards}
+          onCardClick={handleCardClick}
+          shakeHand={shakeHand}
+        />
+      </div>
 
       {/* Master Card Modal */}
       <MasterCardModal
